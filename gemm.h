@@ -132,31 +132,41 @@ void GEMM<int8_t, int32_t, CUBLASLTContext>(CUBLASLTContext dev_ctx,
         stages = algos[i].stages;
         work_space_size = algos[i].workspaceSize;
     } else {
-        FILE *fp;
-        fp=fopen("select.csv", "r");
-        if (!fp) {
-            std::cout << "fp is nullptr" << std::endl;
-            return;
-        }
-        int m_tmp, k_tmp, n_tmp;
-         while(1) {
-            fscanf(fp,"%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f",
-                &m_tmp,&k_tmp, &n_tmp, &algoId, &swizzle, &customOption,  &tile, &splitK_val, 
-                &reductionScheme,&stages, &work_space_size, &time_ref);
-            if (feof(fp))break;
-            if (m_tmp == m && k_tmp == k && n_tmp == n) break;
-        }
-        if (m_tmp != m || k_tmp != k || n_tmp != n) {
-            std::cout << "Please use test mode to select\n, Now we use default params" << std::endl;
-            algoId = 21;
-            swizzle = 0;
-            customOption = 0;
-            tile = 15;
-            splitK_val = 0;
-            reductionScheme = 0;
-            stages = 23;
-            work_space_size = 0;
-        }
+        // FILE *fp;
+        // fp=fopen("select.csv", "r");
+        // if (!fp) {
+        //     std::cout << "fp is nullptr" << std::endl;
+        //     return;
+        // }
+        // int m_tmp, k_tmp, n_tmp;
+        //  while(1) {
+        //     fscanf(fp,"%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%f",
+        //         &m_tmp,&k_tmp, &n_tmp, &algoId, &swizzle, &customOption,  &tile, &splitK_val, 
+        //         &reductionScheme,&stages, &work_space_size, &time_ref);
+        //     if (feof(fp))break;
+        //     if (m_tmp == m && k_tmp == k && n_tmp == n) break;
+        // }
+        // if (m_tmp != m || k_tmp != k || n_tmp != n) {
+        //     std::cout << "Please use test mode to select\n, Now we use default params" << std::endl;
+        //     algoId = 21;
+        //     swizzle = 0;
+        //     customOption = 0;
+        //     tile = 15;
+        //     splitK_val = 0;
+        //     reductionScheme = 0;
+        //     stages = 23;
+        //     work_space_size = 0;
+        // }
+
+        std::cout << "Please use test mode to select\n, Now we use default params" << std::endl;
+        algoId = 21;
+        swizzle = 0;
+        customOption = 0;
+        tile = 15;
+        splitK_val = 0;
+        reductionScheme = 0;
+        stages = 23;
+        work_space_size = 0;
     }
     std::cout << "=======Res========" << std::endl;
     std::cout << "algoId: " << algoId <<  std::endl;
@@ -207,7 +217,7 @@ void GEMM<int8_t, int32_t, CUBLASLTContext>(CUBLASLTContext dev_ctx,
     // PrintMatrix(B_dev, k, n);
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    const int repeats = 1000;
+    const int repeats = 1;
     for (int loop = 0; loop < repeats; loop++) {
         status = cublasLtMatmul(dev_ctx.handle_,
                                     matmul_desc_,
